@@ -1,0 +1,250 @@
+%token T_STRING
+%token T_CHAR
+%token T_DATATYPE
+%token T_BOOL
+%token T_IF
+%token T_ELSE
+%token T_FOR
+%token T_WHILE
+%token T_RETURN
+%token T_STD_COUT
+%token T_STD_ENDL
+%token T_MAIN
+%token T_ID
+%token T_OPEN_SCOPE
+%token T_CLOSE_SCOPE
+%token T_OPEN_PARAN
+%token T_CLOSE_PARAN
+%token T_SEMICOLON
+%token T_COMMA
+%token T_INS_OP
+%token T_ASGN_EQ_OP
+%token T_ASGN_NEQ_OP
+%token T_OR_OP
+%token T_AND_OP
+%token T_BITWISE_OR_OP      
+%token T_BITWISE_XOR_OP
+%token T_BITWISE_AND_OP
+%token T_EQ_OP
+%token T_REL_OP
+%token T_PLUS_MINUS_OP
+%token T_MUL_DIV_MOD_OP
+%token T_NOT_OP
+%token T_BITWISE_NOT_OP
+%token T_INC_DEC_OP
+%token T_FLOAT
+%token T_INTEGER
+%token T_ERR_ID
+
+
+
+
+
+
+
+
+start:                                          prog                            
+
+
+prog:                                           T_DATATYPE main                 
+
+
+main:                                           T_MAIN main_args compound_statement     
+
+                                            
+main_args:                                      T_OPEN_PARAN T_CLOSE_PARAN              
+
+
+compound_statement:                             scope_open statement_list scope_close   
+
+
+scope_open:                                     T_OPEN_SCOPE                    
+
+
+scope_close:                                    T_CLOSE_SCOPE                   
+
+
+statement_list:                                 statement statement_list        
+
+                                            |                                   
+
+                                            ;
+
+statement:                                      compound_statement              
+
+                                            |   init                            
+
+                                            |   expr T_SEMICOLON                
+                                           
+                                            |   if_construct                    
+                                            
+                                            |   while_construct                 
+                                            
+                                            |   for_construct                   
+                                            
+                                            |   output                          
+                                            
+                                            |   return_construct                                                          
+
+                                            |   T_SEMICOLON                     
+                                                                                      
+
+init:                                           T_DATATYPE id_group             
+
+
+id_group:                                       id_init T_SEMICOLON             
+
+                                            |   id_init T_COMMA id_group        
+
+                                            |   id_init id_group                
+
+
+id_init:                                        T_ID                            
+
+                                            |   T_ID T_ASGN_EQ_OP expr          
+
+
+
+expr:                                           expr T_ASGN_EQ_OP expr1         
+
+                                            |   expr T_ASGN_NEQ_OP expr1        
+
+                                            |   expr1                           
+
+
+expr1:                                          expr1 T_OR_OP expr2             
+
+                                            |   expr2                           
+
+
+expr2:                                          expr2 T_AND_OP expr3            
+
+                                            |   expr3                           
+
+
+expr3:                                          expr3 T_BITWISE_OR_OP expr4     
+
+                                            |   expr4                           
+
+
+expr4:                                          expr4 T_BITWISE_XOR_OP expr5    
+
+                                            |   expr5                           
+
+
+expr5:                                          expr5 T_BITWISE_AND_OP expr6    
+
+                                            |   expr6                           
+
+
+expr6:                                          expr6 T_EQ_OP expr7             
+
+                                            |   expr7                           
+
+
+expr7:                                          expr7 T_REL_OP expr8            
+
+                                            |   expr8                           
+
+
+expr8:                                          expr8 T_PLUS_MINUS_OP expr9     
+
+                                            |   expr9                           
+
+
+expr9:                                         expr9 T_MUL_DIV_MOD_OP expr10    
+
+                                            |   expr10                          
+
+
+expr10:                                         T_NOT_OP expr10                 
+
+                                            |   T_BITWISE_NOT_OP expr10         
+
+                                            |   T_INC_DEC_OP expr10             
+
+                                            |   T_PLUS_MINUS_OP expr10          
+
+                                            |   expr11                          
+
+
+expr11:                                         expr11 T_INC_DEC_OP             
+
+                                            |   expr12
+
+
+expr12:                                         T_OPEN_PARAN expr T_CLOSE_PARAN 
+
+                                            |   value                           
+
+
+value:                                          T_ID                            
+
+                                            |   literal                         
+
+
+literal:                                        T_BOOL                          
+
+                                            |   T_CHAR                          
+
+                                            |   T_INTEGER                       
+
+                                            |   T_FLOAT                         
+
+                                            |   T_STRING                        
+
+
+return_construct:                               T_RETURN expr T_SEMICOLON       
+
+
+if_construct:                                   T_IF condition statement else_part      
+
+
+condition:                                      T_OPEN_PARAN expr T_CLOSE_PARAN 
+
+
+else_part:                                      T_ELSE statement                
+
+
+while_construct:                                while_keyword condition statement       
+
+
+while_keyword:                                  T_WHILE                                 
+
+
+for_construct:                                  for_keyword T_OPEN_PARAN for_para_1 for_para_2 for_para_3 T_CLOSE_PARAN statement   
+
+
+for_keyword:                                    T_FOR                       
+
+
+for_para_1:                                     expr T_SEMICOLON            
+
+                                            |   init                        
+
+                                            |   T_SEMICOLON                 
+                                            
+
+for_para_2:                                     expr T_SEMICOLON            
+
+                                            |   T_SEMICOLON                 
+                                            
+
+for_para_3:                                     expr                        
+
+                                            |                               
+
+                                            ;
+
+
+
+output:                                         T_STD_COUT  output_vals T_SEMICOLON     
+
+
+output_vals:                                    T_INS_OP expr output_vals               
+
+                                            |   T_INS_OP T_STD_ENDL output_vals         
+
+                                            |                                           
+                                            
+                                            ;
